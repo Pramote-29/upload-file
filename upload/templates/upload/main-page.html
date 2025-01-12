@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" style="background-color: #003366; color: white;">เอกสารเข้าใหม่</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="background-color: #E6F3FF; color: #003366;">รายชื่อ</a>
+        </li>
+    </ul>
+
+    <!-- Main Content -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="mb-4">ข้อมูลผู้ประสบปัญหาสังคมที่ส่งต่อจากหน่วยงานอื่น</h5>
+            
+            <!-- Search Form -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="ค้นหา...">
+                        <button class="btn btn-primary" type="button">ค้นหา</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>วันที่ส่ง</th>
+                            <th>หน่วยงานที่ส่ง</th>
+                            <th>ผู้นำส่ง</th>
+                            <th>ชื่อ-นามสกุลผู้ประสบปัญหา</th>
+                            <th>เลขประจำตัวประชาชน</th>
+                            <th>ปัญหาของผู้ประสบปัญหาสังคม</th>
+                            <th>ผู้ดูแล</th>
+                            <th>สถานะการรับเรื่อง</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="text-center">ไม่พบข้อมูล</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">ย้อนกลับ</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">ถัดไป</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5 mb-5">
+  <h2>อัปโหลดรูปภาพ</h2>
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field_name, label in upload_labels.items %}
     <div class="card mb-3">
       <div class="card-header navbar text-white fs-4">{{ label }}</div>
       <div class="card-body">
+        {% if field_name == 'injury_evidence' %}
+        <!-- ช่องที่รองรับหลายไฟล์ -->
+        <div class="mb-3">
+          <label for="{{ field_name }}" class="form-label">เลือกไฟล์ (สูงสุด 3 รูป)</label>
+          <input
+            type="file"
+            class="form-control"
+            id="{{ field_name }}"
+            name="{{ field_name }}"
+            accept="image/*"
+            multiple
+          />
+        </div>
+        <div class="mb-3 text-center">
+          <div id="preview_container_{{ field_name }}"></div>
+        </div>
+        {% else %}
+        <!-- ช่องที่รองรับไฟล์เดียว -->
         <div class="mb-3">
           <label for="{{ field_name }}" class="form-label">เลือกไฟล์</label>
           <input
@@ -14,22 +33,32 @@
             class="form-control"
             id="{{ field_name }}"
             name="{{ field_name }}"
-            onchange="previewImage(event, '{{ field_name }}')"
+            onchange="previewSingleImage(event, '{{ field_name }}')"
             accept="image/*"
           />
         </div>
+        <div class="mb-3 text-center">
+          <img
+            id="preview_{{ field_name }}"
+            src="#"
+            alt="ตัวอย่างรูปภาพ"
+            style="max-width: 100%; max-height: 200px; display: none; object-fit: contain;"
+          />
+        </div>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
     <div>
       <a href="{% url 'add_data' %}" class="btn btn-secondary me-2">ย้อนกลับ</a>
-      <button type="submit" formaction="{% url 'check_data' %}" class="btn btn-primary">ตรวจสอบข้อมูล</button>
+      <button type="submit"class="btn btn-primary">ตรวจสอบข้อมูล</button>
     </div>
   </form>
 </div>
 
 <script>
-  function previewImage(event, fieldName) {
+  // แสดงตัวอย่างรูปภาพสำหรับช่องที่อัปโหลดได้ไฟล์เดียว
+  function previewSingleImage(event, fieldName) {
     const input = event.target;
     const preview = document.getElementById(`preview_${fieldName}`);
     if (input.files && input.files[0]) {
@@ -41,6 +70,27 @@
       reader.readAsDataURL(input.files[0]);
     }
   }
+
+  // แสดงตัวอย่างรูปภาพสำหรับช่องที่อัปโหลดได้หลายไฟล์
+  document.querySelectorAll('input[multiple]').forEach(input => {
+    input.addEventListener('change', (event) => {
+      const fieldName = event.target.id;
+      const container = document.getElementById(`preview_container_${fieldName}`);
+      container.innerHTML = ''; // ล้างตัวอย่างรูปภาพเก่า
+      Array.from(event.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.maxWidth = '100%';
+          img.style.maxHeight = '200px';
+          img.style.objectFit = 'contain';
+          img.style.margin = '5px';
+          container.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  });
 </script>
 {% endblock %}
-
